@@ -140,7 +140,12 @@ class Build : NukeBuild
                     CopyFileToDirectory(lifecycleBinary, workBinDirectory, FileExistsPolicy.OverwriteIfNewer);
                 }
 
+                var hwcProject = Solution.GetProject("Hwc");
+                var hwcPublishDir = hwcProject.Directory / "bin" / Configuration / framework / runtime / "publish";
+                CopyDirectoryRecursively(hwcPublishDir, workBinDirectory / "hwc", DirectoryExistsPolicy.Merge);
                 CopyDirectoryRecursively(publishDirectory, workBinDirectory, DirectoryExistsPolicy.Merge);
+                
+                
                 var tempZipFile = TemporaryDirectory / packageZipName;
 
                 ZipFile.CreateFromDirectory(workDirectory, tempZipFile, CompressionLevel.NoCompression, false);

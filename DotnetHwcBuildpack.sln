@@ -19,7 +19,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{7BF14C44-4B4
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{A989B8EF-B8C1-4BA9-BF91-B3B0529E4584}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HwcBootstrapper", "src\Hwc\HwcBootstrapper.csproj", "{8D391E2D-44C2-41D6-9A56-7848B8F588AB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hwc", "src\Hwc\Hwc.csproj", "{8D391E2D-44C2-41D6-9A56-7848B8F588AB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
