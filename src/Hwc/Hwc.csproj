@@ -2,16 +2,35 @@
 
   <PropertyGroup>
     <TargetFramework>net472</TargetFramework>
+    <RuntimeIdentifiers>win-x64;win-x86</RuntimeIdentifiers>
     <TargetLatestRuntimePatch>true</TargetLatestRuntimePatch>
     <RootNamespace>Hwc</RootNamespace>
     <AssemblyName>hwc</AssemblyName>
     <AssemblyTitle>Hosted Web Core .NET</AssemblyTitle>
     <Authors>Andrew Stakhov</Authors>
     <OutputType>Exe</OutputType>
+
+<!--    <TransformOnBuild>true</TransformOnBuild>-->
+
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="CommandLineParser" Version="2.7.82" />
+    <PackageReference Include="DotLiquid" Version="2.0.325" />
+  </ItemGroup>
+<!--  <Import Project="targets\Microsoft.TextTemplating.targets" />-->
+
+  <ItemGroup>
+    <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="ConfigTemplates\ApplicationHostConfig.liquid" />
+    <EmbeddedResource Include="ConfigTemplates\ApplicationHostConfig.liquid">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <LastGenOutput>ApplicationHostConfig.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
 
 </Project>

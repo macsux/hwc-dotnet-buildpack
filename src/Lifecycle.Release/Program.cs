@@ -7,6 +7,6 @@ namespace Lifecycle.Supply
         static int Main(string[] args)
         {
             var argsWithCommand = new[] {"Release"}.Concat(args).ToArray();
-            return DotnetHwcBuildpack.Program.Main(argsWithCommand);        }
+            return HwcDotnetBuildpack.Program.Main(argsWithCommand);        }
     }
 }

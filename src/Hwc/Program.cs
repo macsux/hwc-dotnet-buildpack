@@ -1,17 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using System.Security.Principal;
+using System.Reflection;
 using System.Threading;
-using System.Xml;
 using System.Xml.Linq;
 using System.Xml.XPath;
 using CommandLine;
-using CommandLine.Text;
-using Hwc.ConfigTemplates;
+using DotLiquid;
 
 namespace Hwc
 {
@@ -24,8 +20,10 @@ namespace Hwc
         static int Main(string[] args)
         {
             var helpWriter = new StringWriter ();
-            var parser = new CommandLine.Parser (with => with.HelpWriter = helpWriter);
-            parser.ParseArguments<Options> (args).WithNotParsed (DisplayHelp);
+            var parser = new Parser (with => with.HelpWriter = helpWriter);
+            parser.ParseArguments<Options> (args)
+                .WithParsed(x => _options = x)
+                .WithNotParsed (DisplayHelp);
             
             void DisplayHelp (IEnumerable<Error> errs) 
             {
@@ -44,12 +42,11 @@ namespace Hwc
             
             try
             {
-
-                var appConfigTemplate = new ApplicationHostConfig {Model = _options};
-                var appConfigText = appConfigTemplate.TransformText();
+                var appConfigTemplate = Template.Parse(ReadResource("ApplicationHostConfig.liquid"));
+                var appConfigText = appConfigTemplate.Render(Hash.FromAnonymousObject(_options));
                 ValidateRequiredDllDependencies(appConfigText);
-                var webConfigText = new WebConfig() {Model = _options}.TransformText();
-                var aspNetText = new AspNetConfig().TransformText();
+                var webConfigText = Template.Parse(ReadResource("WebConfig.liquid")).Render(Hash.FromAnonymousObject(_options));
+                var aspNetText = Template.Parse(ReadResource("AspNetConfig.liquid")).Render(Hash.FromAnonymousObject(_options));
 
                 Directory.CreateDirectory(_options.TempDirectory);
                 Directory.CreateDirectory(_options.ConfigDirectory);
@@ -59,11 +56,12 @@ namespace Hwc
 
                 
 
-                Console.WriteLine("Activating HWC with following settings:");
+                // Console.WriteLine("Activating HWC with following settings:");
                 try
                 {
-                    Console.WriteLine($"ApplicationHost.config: {_options.ApplicationHostConfigPath}");
-                    Console.WriteLine($"Web.config: {_options.WebConfigPath}");
+                    // Console.WriteLine($"ApplicationHost.config: {_options.ApplicationHostConfigPath}");
+                    // Console.WriteLine($"Web.config: {_options.WebConfigPath}");
+                    // Console.WriteLine($"App folder: {_options.AppRootPath}");
                     HostableWebCore.Activate(_options.ApplicationHostConfigPath, _options.WebConfigPath, _options.ApplicationInstanceId);
                 }
                 catch (UnauthorizedAccessException)
@@ -75,7 +73,7 @@ namespace Hwc
 
 
                 Console.WriteLine($"Server ID {_options.ApplicationInstanceId} started");
-                Console.WriteLine("PRESS Enter to shutdown");
+                Console.WriteLine($"Server root set to {_options.AppRootPath}");
                 // we gonna read on different thread here because Console.ReadLine is not the only way the program can end
                 // we're also listening to the system events where the app is ordered to shutdown. exitWaitHandle is used to
                 // hook up both of these events
@@ -104,7 +102,20 @@ namespace Hwc
             return 1;
         }
 
+        public static string ReadResource(string name)
+        {
+            // Determine path
+            var assembly = Assembly.GetExecutingAssembly();
+            // Format: "{Namespace}.{Folder}.{filename}.{Extension}"
+            var resourcePath = assembly.GetManifestResourceNames()
+                .Single(str => str.EndsWith(name));
 
+            using (Stream stream = assembly.GetManifestResourceStream(resourcePath))
+            using (StreamReader reader = new StreamReader(stream))
+            {
+                return reader.ReadToEnd();
+            }
+        }
         private static void Shutdown()
         {
             

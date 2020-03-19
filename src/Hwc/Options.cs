@@ -24,6 +24,8 @@ namespace Hwc
         [Option("appRootPath", Default = ".", HelpText = "app web root path", Required = false)]
         public string AppRootPath { get; set; } = Environment.CurrentDirectory;
 
+        public string AppRootPathFull => Path.GetFullPath(AppRootPath);
+
         [Option("port", HelpText = "port for the application to listen with", Required = false)]
         public int Port { get; set; } = 8080;
         public string Protocol { get; set; } = "http";

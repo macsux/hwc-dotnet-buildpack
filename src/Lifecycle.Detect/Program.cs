@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using DotnetHwcBuildpack;
 
 namespace Lifecycle.Supply
 {
@@ -8,7 +9,7 @@ namespace Lifecycle.Supply
         static int Main(string[] args)
         {
             var argsWithCommand = new[] {"Detect"}.Concat(args).ToArray();
-            return DotnetHwcBuildpack.Program.Main(argsWithCommand);
+            return HwcDotnetBuildpack.Program.Main(argsWithCommand);
         }
     }
 }
