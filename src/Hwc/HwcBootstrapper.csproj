@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net472</TargetFramework>
+    <TargetLatestRuntimePatch>true</TargetLatestRuntimePatch>
+    <RootNamespace>Hwc</RootNamespace>
+    <AssemblyName>hwc</AssemblyName>
+    <AssemblyTitle>Hosted Web Core .NET</AssemblyTitle>
+    <Authors>Andrew Stakhov</Authors>
+<!--    <PublishSingleFile>true</PublishSingleFile>-->
+<!--    <RuntimeIdentifier>win-x64</RuntimeIdentifier>-->
+    <OutputType>Exe</OutputType>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CommandLineParser" Version="2.7.82" />
+<!--    <PackageReference Include="System.CodeDom" Version="4.7.0" />-->
+<!--    <PackageReference Include="Costura.Fody" Version="2.0.1" />-->
+<!--    <None Include="FodyWeavers.xml" />-->
+  </ItemGroup>
+
+</Project>
