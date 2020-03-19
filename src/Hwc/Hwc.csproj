@@ -26,11 +26,6 @@
 
   <ItemGroup>
     <None Remove="ConfigTemplates\ApplicationHostConfig.liquid" />
-    <EmbeddedResource Include="ConfigTemplates\ApplicationHostConfig.liquid">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-      <LastGenOutput>ApplicationHostConfig.cs</LastGenOutput>
-    </EmbeddedResource>
   </ItemGroup>
 
 </Project>

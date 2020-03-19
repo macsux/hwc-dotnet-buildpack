@@ -42,11 +42,11 @@ namespace Hwc
             
             try
             {
-                var appConfigTemplate = Template.Parse(ReadResource("ApplicationHostConfig.liquid"));
-                var appConfigText = appConfigTemplate.Render(Hash.FromAnonymousObject(_options));
+                var hash = Hash.FromAnonymousObject(_options);
+                var appConfigText = Template.Parse(ReadResource("ApplicationHostConfig.xml")).Render(hash);
                 ValidateRequiredDllDependencies(appConfigText);
-                var webConfigText = Template.Parse(ReadResource("WebConfig.liquid")).Render(Hash.FromAnonymousObject(_options));
-                var aspNetText = Template.Parse(ReadResource("AspNetConfig.liquid")).Render(Hash.FromAnonymousObject(_options));
+                var webConfigText = Template.Parse(ReadResource("WebConfig.xml")).Render(hash);
+                var aspNetText = Template.Parse(ReadResource("AspNetConfig.xml")).Render(hash);
 
                 Directory.CreateDirectory(_options.TempDirectory);
                 Directory.CreateDirectory(_options.ConfigDirectory);
@@ -56,12 +56,12 @@ namespace Hwc
 
                 
 
-                // Console.WriteLine("Activating HWC with following settings:");
+                Console.WriteLine("Activating HWC with following settings:");
                 try
                 {
-                    // Console.WriteLine($"ApplicationHost.config: {_options.ApplicationHostConfigPath}");
-                    // Console.WriteLine($"Web.config: {_options.WebConfigPath}");
-                    // Console.WriteLine($"App folder: {_options.AppRootPath}");
+                    Console.WriteLine($"ApplicationHost.config: {_options.ApplicationHostConfigPath}");
+                    Console.WriteLine($"Web.config: {_options.WebConfigPath}");
+                    Console.WriteLine($"App folder: {_options.AppRootPathFull}");
                     HostableWebCore.Activate(_options.ApplicationHostConfigPath, _options.WebConfigPath, _options.ApplicationInstanceId);
                 }
                 catch (UnauthorizedAccessException)
@@ -73,7 +73,6 @@ namespace Hwc
 
 
                 Console.WriteLine($"Server ID {_options.ApplicationInstanceId} started");
-                Console.WriteLine($"Server root set to {_options.AppRootPath}");
                 // we gonna read on different thread here because Console.ReadLine is not the only way the program can end
                 // we're also listening to the system events where the app is ordered to shutdown. exitWaitHandle is used to
                 // hook up both of these events
